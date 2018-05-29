@@ -1,8 +1,7 @@
 using Base.Test
 using QuantumOptics
 
-mutable struct SpectralanalysisTestOperator <: Operator
-end
+mutable struct SpectralanalysisTestOperator <: Operator end
 
 @testset "spectralanalysis" begin
 

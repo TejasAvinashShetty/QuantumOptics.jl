@@ -45,13 +45,13 @@ end
 """
 For sparse operators by default it only returns the 6 lowest eigenvalues.
 """
-function eigenstates(op::SparseOperator; warning=true, kwargs...)
+function eigenstates(op::SparseOperator, n::Int=6; warning=true, kwargs...)
     b = basis(op)
     # TODO: Change to sparese-Hermitian specific algorithm if more efficient
     if !ishermitian(op) && warning
         warn(nonhermitian_warning)
     end
-    D, V = eigs(op.data; which=:SR, kwargs...)
+    D, V = eigs(op.data; which=:SR, nev=n, kwargs...)
     states = [Ket(b, V[:, k]) for k=1:length(D)]
     D, states
 end

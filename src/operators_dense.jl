@@ -85,6 +85,10 @@ operators.dagger(x::DenseOperator) = DenseOperator(x.basis_r, x.basis_l, x.data'
 operators.ishermitian(A::DenseOperator) = ishermitian(A.data)
 
 operators.tensor(a::DenseOperator, b::DenseOperator) = DenseOperator(tensor(a.basis_l, b.basis_l), tensor(a.basis_r, b.basis_r), kron(b.data, a.data))
+
+operators.conj(a::DenseOperator) = DenseOperator(a.basis_l, a.basis_r, conj(a.data))
+operators.conj!(a::DenseOperator) = conj!(a.data)
+
 """
     tensor(x::Ket, y::Bra)
 

@@ -18,6 +18,10 @@ about the way the calculation is done is needed, use the functions directly.
 More details can be found at
 [http://docs.julialang.org/en/stable/stdlib/linalg/].
 
+NOTE: Especially for small systems full diagonalization with Julia's `eig`
+function is often more desirable. You can convert a sparse operator `A` to a
+dense one using `full(A)`.
+
 If the given operator is non-hermitian a warning is given. This behavior
 can be turned off using the keyword `warning=false`.
 """
@@ -41,15 +45,13 @@ end
 """
 For sparse operators by default it only returns the 6 lowest eigenvalues.
 """
-function eigenstates(op::SparseOperator, n::Int=length(basis(op)); warning=true)
+function eigenstates(op::SparseOperator; warning=true, kwargs...)
     b = basis(op)
-    if ishermitian(op)
-        data = Hermitian(op.data)
-    else
-        warning && warn(nonhermitian_warning)
-        data = op.data
+    # TODO: Change to sparese-Hermitian specific algorithm if more efficient
+    if !ishermitian(op) && warning
+        warn(nonhermitian_warning)
     end
-    D, V = eigs(data; nev=n, which=:SR)
+    D, V = eigs(op.data; which=:SR, kwargs...)
     states = [Ket(b, V[:, k]) for k=1:length(D)]
     D, states
 end

@@ -75,6 +75,9 @@ operators.tensor(a::SparseOperator, b::DenseOperator) = SparseOperator(tensor(a.
 
 operators.trace(op::SparseOperator) = (check_samebases(op); trace(op.data))
 
+operators.conj(op::SparseOperator) = SparseOperator(op.basis_l, op.basis_r, conj(op.data))
+operators.conj!(op::SparseOperator) = conj!(op.data)
+
 function operators.ptrace(op::SparseOperator, indices::Vector{Int})
     operators.check_ptrace_arguments(op, indices)
     shape = [op.basis_l.shape; op.basis_r.shape]
